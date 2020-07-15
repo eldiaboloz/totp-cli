@@ -19,7 +19,6 @@ if not decrypted_data.ok:
     exit(1)
 config_all = json.loads(decrypted_data.data)
 config = config_all[sys.argv[1]];
-print(config)
 totp = pyotp.totp.TOTP(config['secret'], digits=config['digits'], interval=config['period']).now()
 if os.environ["DISPLAY"]:
     # load in clipboard
