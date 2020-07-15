@@ -4,6 +4,7 @@ import gnupg
 import json
 import sys
 import os
+import subprocess
 
 if len(sys.argv) < 2:
     exit(1)
@@ -18,5 +19,17 @@ if not decrypted_data.ok:
     exit(1)
 config_all = json.loads(decrypted_data.data)
 config = config_all[sys.argv[1]];
-totp = pyotp.totp.TOTP(config['secret'], digits=config['digits'], interval=config['period'])
-sys.stdout.write(totp.now())
+print(config)
+totp = pyotp.totp.TOTP(config['secret'], digits=config['digits'], interval=config['period']).now()
+if os.environ["DISPLAY"]:
+    # load in clipboard
+    subprocess.Popen(['xclip', '-in', '-selection', 'clipboard'], stdin=subprocess.PIPE) \
+        .communicate(input=totp.encode('ascii'))
+    if (len(sys.argv) >= 3):
+        # paste to current window
+        subprocess.run(['xdotool', 'type', totp])
+        subprocess.run(['xdotool', 'key', 'Return'])
+    sys.stderr.write(totp)
+else:
+    # print only
+    print(totp)
