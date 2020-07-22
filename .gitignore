@@ -1,3 +1,4 @@
 /.gnupg
 /totp_init.json.pgp
 /totp_names.txt
+/venv

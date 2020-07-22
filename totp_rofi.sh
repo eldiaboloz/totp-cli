@@ -10,5 +10,3 @@ if [ -n "$name" ]; then
 fi
 
 cat "$(dirname "$(realpath "$0")")/totp_names.txt"
-
-# vim:sw=2:ts=2:et:
